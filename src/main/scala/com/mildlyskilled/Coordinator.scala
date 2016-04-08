@@ -31,5 +31,17 @@ class Coordinator(im: Image, outFile: String, scene: Scene, counter: Counter,
     case Result(x, y, colour) =>
       set(x, y, colour)
       waiting -= 1
+
+      if (waiting == 0) {
+        println("rays cast " + counter.rayCount)
+        println("rays hit " + counter.hitCount)
+        println("light " + counter.lightCount)
+        println("dark " + counter.darkCount)
+
+        print
+        println("Image printed out")
+        context.system.terminate()
+        context stop self
+      }
   }
 }

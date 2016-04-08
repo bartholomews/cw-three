@@ -1,6 +1,8 @@
 import java.io.File
 
+import com.mildlyskilled.Coordinator
 import com.mildlyskilled.{Scene, Image, Coordinator, Trace}
+
 
 object Tracer extends App {
 
@@ -24,11 +26,8 @@ object Tracer extends App {
 
     scene.traceImage(width, height)
 
-    // TODO:
-    // This one is tricky--we can't simply send a message here to print
-    // the image, since the actors started by traceImage haven't necessarily
-    // finished yet.  Maybe print should be called elsewhere?
-    Coordinator.print
+    // AJ - moved print to Coordinator actor
+    //Coordinator.print
   }
 
 }
