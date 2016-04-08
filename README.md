@@ -23,11 +23,11 @@ based on *Kwabena Aning*'s [sdp2016-ray-tracer][5]
 ######*Tasks List:*
 
 + *create a Camera class holding camera functionality currently in Scene class*
-
+    - Done by Vlad
 + *create a Coordinator Actor*
 
 + *create a Counter class holding hits, rays and other counters*
-
+    - Done by Vlad
 + *create Protocols defining Actors' Messages*
 
 + *create a Worker Actor (e.g. RenderingEngine)*
