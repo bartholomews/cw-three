@@ -20,7 +20,6 @@ class Coordinator(im: Image, outFile: String, scene: Scene, counter: Counter,
   // TODO: make set a message
   def set(x: Int, y: Int, c: Colour) = {
     image(x, y) = c
-    waiting -= 1
   }
 
   def print = {
@@ -31,5 +30,6 @@ class Coordinator(im: Image, outFile: String, scene: Scene, counter: Counter,
   override def receive: Receive = {
     case Result(x, y, colour) =>
       set(x, y, colour)
+      waiting -= 1
   }
 }
