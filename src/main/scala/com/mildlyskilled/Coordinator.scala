@@ -1,16 +1,20 @@
 package com.mildlyskilled
 
-import akka.actor.Actor
+import akka.actor.{Props, Actor}
+import akka.routing.RoundRobinPool
 
 /**
   * Coordinator made into an Actor
   */
 
-class Coordinator(im: Image, outFile: String) extends Actor {
+class Coordinator(im: Image, outFile: String, scene: Scene, counter: Counter,
+                  camera: Camera) extends Actor {
   val image = im
   val outfile = outFile
   var waiting = im.height * im.width
 
+  val renderNodesRouter = context.actorOf(Props(new RenderingEngine(scene, counter, camera))
+    .withRouter(RoundRobinPool(50)), name = "renderNodes")
 
 
   // TODO: make set a message
