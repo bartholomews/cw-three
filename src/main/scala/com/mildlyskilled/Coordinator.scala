@@ -6,17 +6,12 @@ import akka.actor.Actor
   * Coordinator made into an Actor
   */
 
-class Coordinator extends Actor {
-  def init(im: Image, of: String) = {
-    image = im
-    outfile = of
-    waiting = im.width * im.height
-  }
+class Coordinator(im: Image, outFile: String) extends Actor {
+  val image = im
+  val outfile = outFile
+  var waiting = im.height * im.width
 
-  // Number of pixels we're waiting for to be set.
-  var waiting = 0
-  var outfile: String = null
-  var image: Image = null
+
 
   // TODO: make set a message
   def set(x: Int, y: Int, c: Colour) = {
