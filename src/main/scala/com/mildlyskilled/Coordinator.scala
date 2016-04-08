@@ -28,5 +28,8 @@ class Coordinator(im: Image, outFile: String, scene: Scene, counter: Counter,
     image.print(outfile)
   }
 
-  override def receive: Receive = ???
+  override def receive: Receive = {
+    case Result(x, y, colour) =>
+      set(x, y, colour)
+  }
 }
