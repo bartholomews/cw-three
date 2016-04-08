@@ -1,7 +1,6 @@
 ## cw-three
 #####BBK SDP 2015/2016
-####Ray Tracer
-
+### Ray Tracer
 
 ===
 *authors:*
@@ -21,3 +20,22 @@ based on *Kwabena Aning*'s [sdp2016-ray-tracer][5]
 [5]: https://bitbucket.org/kaning/sdp2016-ray-tracer
 ===
 
+######*Tasks List:*
+
++ *create a Camera class holding camera functionality currently in Scene class*
+
++ *create a Coordinator Actor*
+
++ *create a Counter class holding hits, rays and other counters*
+
++ *create Protocols defining Actors' Messages*
+
++ *create a Worker Actor (e.g. RenderingEngine)*
+
++ *move the functionality of tracing a chunk of image into the worker actor*
+
++ *create a Settings class for values like width, height, antiAliasing, ambient etc.*
+
++ *update the Tracer main class accordingly*
+
++ *tests*
