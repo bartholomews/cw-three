@@ -16,7 +16,7 @@ class Coordinator(im: Image, outFile: String, scene: Scene, counter: Counter,
   val renderNodesRouter = context.actorOf(Props(new RenderingEngine(scene, counter, camera, settings))
     .withRouter(RoundRobinPool(settings.renderNodeNumber)), name = "renderNodes")
 
-  val startOfSegments = for (i <- 0 to image.height by image.width / 10) yield i
+  val startOfSegments = for (i <- 0 to image.height by settings.renderLineWidth) yield i
   val endOfSegments = startOfSegments.tail
 
   def set(x: Int, y: Int, c: Colour) = {
