@@ -4,8 +4,8 @@ import akka.actor.Actor
 import akka.actor.Actor.Receive
 
 /**
-  * Created by annabel on 09/04/16.
+  * Blank to be implemented later
   */
-class RenderingEngine(scene: Scene, counter: Counter, camera: Camera) extends Actor {
+class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: Settings) extends Actor {
   override def receive: Receive = ???
 }

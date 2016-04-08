@@ -8,13 +8,13 @@ import akka.routing.RoundRobinPool
   */
 
 class Coordinator(im: Image, outFile: String, scene: Scene, counter: Counter,
-                  camera: Camera) extends Actor {
+                  camera: Camera, settings: Settings) extends Actor {
   val image = im
   val outfile = outFile
   var waiting = im.height * im.width
 
-  val renderNodesRouter = context.actorOf(Props(new RenderingEngine(scene, counter, camera))
-    .withRouter(RoundRobinPool(50)), name = "renderNodes")
+  val renderNodesRouter = context.actorOf(Props(new RenderingEngine(scene, counter, camera, settings))
+    .withRouter(RoundRobinPool(settings.renderNodeNumber)), name = "renderNodes")
 
   val startOfSegments = for (i <- 0 to image.height by image.width / 10) yield i
   val endOfSegments = startOfSegments.tail
