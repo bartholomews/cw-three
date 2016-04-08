@@ -16,8 +16,9 @@ class Coordinator(im: Image, outFile: String, scene: Scene, counter: Counter,
   val renderNodesRouter = context.actorOf(Props(new RenderingEngine(scene, counter, camera))
     .withRouter(RoundRobinPool(50)), name = "renderNodes")
 
+  val startOfSegments = for (i <- 0 to image.height by image.width / 10) yield i
+  val endOfSegments = startOfSegments.tail
 
-  // TODO: make set a message
   def set(x: Int, y: Int, c: Colour) = {
     image(x, y) = c
   }
@@ -30,7 +31,7 @@ class Coordinator(im: Image, outFile: String, scene: Scene, counter: Counter,
   override def receive: Receive = {
 
     case Start =>
-
+      for (i <- endOfSegments.indices) renderNodesRouter ! Render(startOfSegments(i), endOfSegments(i), i)
 
     case Result(x, y, colour) =>
       set(x, y, colour)
