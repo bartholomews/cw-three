@@ -28,6 +28,10 @@ class Coordinator(im: Image, outFile: String, scene: Scene, counter: Counter,
   }
 
   override def receive: Receive = {
+
+    case Start =>
+
+
     case Result(x, y, colour) =>
       set(x, y, colour)
       waiting -= 1
