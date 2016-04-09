@@ -1,7 +1,8 @@
 package com.mildlyskilled
 
-import akka.actor.{Props, Actor}
+import akka.actor.{Actor, Props}
 import akka.routing.RoundRobinPool
+import org.apache.commons.lang.time.StopWatch
 
 /**
   * Coordinator made into an Actor
@@ -12,7 +13,9 @@ class Coordinator(im: Image, outFile: String, scene: Scene, counter: Counter,
   val image = im
   val outfile = outFile
   var waiting = im.height * im.width
+  val stopWatch = new StopWatch
 
+  //render node actors with round robin routing algorithm
   val renderNodesRouter = context.actorOf(Props(new RenderingEngine(scene, counter, camera, settings))
     .withRouter(RoundRobinPool(settings.renderNodeNumber)), name = "renderNodes")
 
@@ -31,6 +34,7 @@ class Coordinator(im: Image, outFile: String, scene: Scene, counter: Counter,
   override def receive: Receive = {
 
     case Start =>
+      stopWatch.start()
       for (i <- endOfSegments.indices) renderNodesRouter ! Render(startOfSegments(i), endOfSegments(i), i)
 
     case Result(x, y, colour) =>
@@ -44,6 +48,7 @@ class Coordinator(im: Image, outFile: String, scene: Scene, counter: Counter,
         println("dark " + counter.darkCount.get())
 
         println("Image printed out")
+        println("Processing time: " + stopWatch.getTime + " ms")
         context.system.terminate()
         context stop self
       }

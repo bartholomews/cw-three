@@ -1,7 +1,7 @@
 package com.mildlyskilled
 
 import akka.actor.Actor
-import akka.actor.Actor.Receive
+import org.apache.commons.lang.time.StopWatch
 
 /**
   * This is a worker actor, moving the computation into this class
@@ -14,6 +14,8 @@ class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: 
   val width = settings.width
   val height = settings.height
 
+  val stopWatch = new StopWatch
+
   def receive = {
     case Render(startY, endY , id) => {
       traceImage(startY, endY, id)
@@ -21,7 +23,7 @@ class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: 
   }
 
   def traceImage(startY: Int, endY: Int, id: Int) {
-
+    stopWatch.start()
     println("Render Node " + id + " started")
 
     for (y <- startY until endY) {
@@ -48,7 +50,8 @@ class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: 
         sender ! Result(x, y, resultColor)
       }
     }
-    println("Render Node " + id + " finished")
+    stopWatch.stop()
+    println("Render Node " + id + " finished in " + stopWatch.getTime + " ms")
   }
 
   def shadow(ray: Ray, l: Light): Boolean = {
