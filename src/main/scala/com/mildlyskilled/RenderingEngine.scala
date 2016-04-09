@@ -7,6 +7,7 @@ import org.apache.commons.lang.time.StopWatch
   * This is a worker actor, moving the computation into this class
   */
 class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: Settings) extends Actor {
+  val id = RenderingEngine.inc
   val objects = scene.objects
   val lights = scene.lights
 
@@ -22,9 +23,9 @@ class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: 
     }
   }
 
-  def traceImage(startY: Int, endY: Int, id: Int) {
+  def traceImage(startY: Int, endY: Int, iter: Int) {
     stopWatch.start()
-    println("Render Node " + id + " started")
+    println("Render Node ID: " + id + ". Rendering Region Num: " + iter)
 
     for (y <- startY until endY) {
       for (x <- 0 until width) {
@@ -160,4 +161,9 @@ class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: 
       }
     }
   }
+}
+
+object RenderingEngine{
+  private var ID = 0
+  private def inc = {ID += 1; ID}
 }
