@@ -36,27 +36,48 @@ Counter class is used to calculate total amount of rays cast (which should equal
 and height for AntiAliasing=1, as 1 ray is cast per 1 pixel). To avoid race conditions whilst incrementing
 counters by multiple threads (actors) AtomicIntegers are used as fields.
 
-######*Tasks List:*
+######*Development TO DO List:*
 
-+ *create a Camera class holding camera functionality currently in Scene class*
++ *create a Camera class holding camera functionality currently in Scene class* --DONE
 
-+ *refactor Scene class to have just objects and lights*
++ *refactor Scene class to have just objects and lights* --DONE
 
-+ *create a Counter class holding hits, rays and other counters*
++ *create a Counter class holding hits, rays and other counters* --DONE
 
-+ *create Protocols defining Actors' Messages*
++ *create Protocols defining Actors' Messages* --DONE
     
-+ *create a Coordinator Actor*
++ *create a Coordinator Actor* --DONE
 
-+ *create a Worker Actor (e.g. RenderingEngine)*
++ *create a Worker Actor (e.g. RenderingEngine)* --DONE
 
-+ *move the functionality of rendering a part (horizontal strip) of image into the worker actor*
++ *move the functionality of rendering a part (horizontal strip) of image into the worker actor* --DONE
 
-+ *move all configuration of renderer to a Settings class (width, height, antiAliasing, ambient etc.)*
++ *move all configuration of renderer to a Settings class (width, height, antiAliasing, ambient etc.)* --DONE
 
-+ *update the Tracer main class accordingly*
++ *update the Tracer main class accordingly* --DONE
 
-+ *tests*
+
+######*Refactoring TO DO List:*
+
++ *refactor for Scene. Move file reading to a separate class.*
+
++ *refactor for Settings. Settings can be provided in a text file as well. Reader class can be used same as in Scene to load config.*
+
++ *refactor for Coordinator. Image division to regions can be done in a separate class or method (startOfSegments and endOfSegments)*
+
+
+######*Testing TO DO List:*
+
++ *tests for provided classes: Vector, Sphere, Ray, Image *
+
++ *tests for Coordinator*
+
++ *tests for RenderingEngine*
+
++ *tests for Scene and new Reader class*
+
++ *tests for Tracer*
+
 
 ######*Development methodology used:*
 
