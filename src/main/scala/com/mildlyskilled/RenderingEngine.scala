@@ -52,6 +52,7 @@ class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: 
     }
     stopWatch.stop()
     println("Render Node " + id + " finished in " + stopWatch.getTime + " ms")
+    stopWatch.reset()
   }
 
   def shadow(ray: Ray, l: Light): Boolean = {
