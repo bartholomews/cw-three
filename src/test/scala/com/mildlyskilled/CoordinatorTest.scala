@@ -39,5 +39,10 @@ class CoordinatorTest(_system: ActorSystem) extends TestKit(_system) with Implic
       //noinspection ComparingUnrelatedTypes
       assert(realCoordinator.waiting != null)
     }
+
+    "have start and end points for the pixel rendering" in {
+      assert(realCoordinator.startOfSegments != null)
+      assert(realCoordinator.endOfSegments != null)
+    }
   }
 }
