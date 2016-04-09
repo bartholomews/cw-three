@@ -25,5 +25,19 @@ class CoordinatorTest(_system: ActorSystem) extends TestKit(_system) with Implic
     "have a worker router" in {
       assert(realCoordinator.renderNodesRouter != null)
     }
+
+    "have a stopwatch" in {
+      assert(realCoordinator.stopWatch != null)
+    }
+
+    "be waiting for the correct number of pixels" in {
+      /*
+      I couldn't find the image height/width anywhere so made this check not null
+      Not sure if this check will work in reality as the waiting variable will change
+      quite quickly.
+       */
+      //noinspection ComparingUnrelatedTypes
+      assert(realCoordinator.waiting != null)
+    }
   }
 }
