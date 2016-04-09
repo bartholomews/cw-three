@@ -38,12 +38,11 @@ class Coordinator(im: Image, outFile: String, scene: Scene, counter: Counter,
       waiting -= 1
 
       if (waiting == 0) {
-        println("rays cast " + counter.rayCount)
-        println("rays hit " + counter.hitCount)
-        println("light " + counter.lightCount)
-        println("dark " + counter.darkCount)
+        println("rays cast " + counter.rayCount.get())
+        println("rays hit " + counter.hitCount.get())
+        println("light " + counter.lightCount.get())
+        println("dark " + counter.darkCount.get())
 
-        print
         println("Image printed out")
         context.system.terminate()
         context stop self

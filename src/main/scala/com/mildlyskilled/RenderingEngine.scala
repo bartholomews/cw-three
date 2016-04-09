@@ -42,10 +42,8 @@ class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: 
         }
 
         if (Vector(resultColor.r, resultColor.g, resultColor.b).norm < 1)
-//          counter.darkCount += 1
           counter.darkCount.incrementAndGet()
         if (Vector(resultColor.r, resultColor.g, resultColor.b).norm > 1)
-//          counter.lightCount += 1
           counter.lightCount.incrementAndGet()
         sender ! Result(x, y, resultColor)
       }
@@ -129,7 +127,6 @@ class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: 
   def trace(ray: Ray): Colour = trace(ray, maxDepth)
 
   private def trace(ray: Ray, depth: Int): Colour = {
-//    counter.rayCount += 1
     counter.rayCount.incrementAndGet()
 
     // Compute the intersections of the ray with every object, sort by
@@ -144,7 +141,6 @@ class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: 
       case Some((v, o)) => {
         // Compute the color as the sum of:
 
-//        counter.hitCount += 1
         counter.hitCount.incrementAndGet()
 
         // The contribution of each point light source.
