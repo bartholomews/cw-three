@@ -3,7 +3,7 @@ package test.scala.com.mildlyskilled
 import akka.actor.{Props, ActorSystem}
 import akka.testkit.{TestActorRef, ImplicitSender, TestKit}
 import com.mildlyskilled._
-import org.scalatest.{MustMatchers, BeforeAndAfterAll, Matchers, WordSpecLike}
+import org.scalatest.{MustMatchers, BeforeAndAfterAll, MustMatchers, WordSpecLike}
 
 /**
   * Created to test Coordinator Actor
