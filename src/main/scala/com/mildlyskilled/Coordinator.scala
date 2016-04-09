@@ -15,9 +15,9 @@ class Coordinator(image: Image, outFile: String, scene: Scene, settings: Setting
 
   //render node actors with round robin routing algorithm
   val renderNodesRouter = context.actorOf(Props(new RenderingEngine(scene, counter, camera, settings))
-    .withRouter(RoundRobinPool(settings.renderNodeNumber)), name = "renderNodes")
+    .withRouter(RoundRobinPool(settings.nodes)), name = "renderNodes")
 
-  val startOfSegments = for (i <- 0 to image.height by settings.renderLineWidth) yield i
+  val startOfSegments = for (i <- 0 to image.height by settings.regionHeight) yield i
   val endOfSegments = startOfSegments.tail
 
   def set(xPos: Int, yPos: Int, color: Colour) = {

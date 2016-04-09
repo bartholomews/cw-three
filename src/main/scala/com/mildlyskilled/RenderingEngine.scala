@@ -141,7 +141,7 @@ class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: 
     r match {
       case None => {
         // If no intersection, the color is black
-        settings.backgroundColor
+        settings.bgColor
       }
       case Some((v, o)) => {
         // Compute the color as the sum of:

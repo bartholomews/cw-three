@@ -59,7 +59,7 @@ counters by multiple threads (actors) AtomicIntegers are used as fields.
 
 ######*Refactoring TO DO List:*
 
-+ *refactor for Scene. Move file reading to a separate class.*
++ *refactor for Scene. Move file reading to a separate class.* --DONE
 
 + *refactor for Settings. Settings can be provided in a text file as well. Reader class can be used same as in Scene to load config.*
 
@@ -74,7 +74,7 @@ counters by multiple threads (actors) AtomicIntegers are used as fields.
 
 + *tests for RenderingEngine*
 
-+ *tests for Scene and new Reader class*
++ *tests for Scene and new Reader class* --DONE
 
 + *tests for Tracer*
 
