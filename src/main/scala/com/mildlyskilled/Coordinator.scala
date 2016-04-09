@@ -44,11 +44,12 @@ class Coordinator(image: Image, outFile: String, scene: Scene, settings: Setting
         println("light " + counter.lightCount)
         println("dark " + counter.darkCount)
 
+        print
         println("Image printed out")
         stopWatch.stop()
         println("Processing time: " + stopWatch.getTime + " ms")
         context stop self
-        context.system.shutdown()
+        context.system.terminate()
       }
   }
 }
