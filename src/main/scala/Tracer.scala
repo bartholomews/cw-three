@@ -7,7 +7,7 @@ object Tracer extends App {
   val settings = new Settings
   val counter = new Counter
   val camera = new Camera(Vector.origin, 90f)
-  val scene = Scene.fromFile(inFile)
+  val scene = SceneLoader.load(inFile)
 
   val image = new Image(settings.width, settings.height)
 
