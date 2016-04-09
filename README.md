@@ -32,8 +32,8 @@ RenderingEngine actors encapsulate ray tracing functionality.
 Settings class is used to configure renderer. Such parameters as output image width, height, antialiasing,
 global ambient light, background colour and height of a render region can be updated in this class.
 
-Counter class is used to calculate total amount of rays casted (which should equals to a product of image width
-and height for AntiAliasing=1, as 1 ray is casted per 1 pixel). To avoid race condition whilst incrementing
+Counter class is used to calculate total amount of rays cast (which should equals to a product of image width
+and height for AntiAliasing=1, as 1 ray is cast per 1 pixel). To avoid race conditions whilst incrementing
 counters by multiple threads (actors) AtomicIntegers are used as fields.
 
 ######*Tasks List:*
