@@ -14,7 +14,7 @@ based on *Kwabena Aning*'s [sdp2016-ray-tracer][5]
 
 [1]: https://github.com/BBK-PiJ-2015-87
 [2]: https://github.com/annabeljump
-[3]: https://
+[3]: https://github.com/BBK-PiJ-2015-89
 [4]: https://github.com/f-bartholomews
 
 [5]: https://bitbucket.org/kaning/sdp2016-ray-tracer
