@@ -1,14 +1,16 @@
 package com.mildlyskilled
 
-import akka.actor.{Actor, Props}
-import akka.routing.RoundRobinPool
+import akka.actor.{Actor, ActorLogging, Props}
+import akka.routing.{BalancingPool, RoundRobinPool, SmallestMailboxPool}
 import org.apache.commons.lang.time.StopWatch
 
 /**
   * Coordinator made into an Actor
   */
 
-class Coordinator(image: Image, outFile: String, scene: Scene, settings: Settings, counter: Counter, camera: Camera) extends Actor {
+class Coordinator(image: Image, outFile: String, scene: Scene, settings: Settings, counter: Counter, camera: Camera)
+  extends Actor with ActorLogging {
+
   var waiting = image.width * image.height //for counting rendered pixels
 
   val stopWatch = new StopWatch
@@ -33,23 +35,28 @@ class Coordinator(image: Image, outFile: String, scene: Scene, settings: Setting
   def receive = {
     case Start =>
       stopWatch.start()
-      for (i <- 0 until endOfSegments.length) renderNodesRouter ! Render(startOfSegments(i), endOfSegments(i), i)
+      for (i <- endOfSegments.indices)
+        renderNodesRouter ! Render(startOfSegments(i), endOfSegments(i), i)
 
     case Result(xPos, yPos, color) =>
       set(xPos, yPos, color)
 
       if (waiting == 0) {
-        println("rays cast " + counter.rayCount)
-        println("rays hit " + counter.hitCount)
-        println("light " + counter.lightCount)
-        println("dark " + counter.darkCount)
-
-        print
-        println("Image printed out")
+        printResults()
         stopWatch.stop()
-        println("Processing time: " + stopWatch.getTime + " ms")
+        log.info("Processing time: " + stopWatch.getTime + " ms")
+
         context stop self
         context.system.terminate()
       }
   }
+
+  def printResults() = {
+    println("\nImage printed out")
+    println("rays cast " + counter.rayCount)
+    println("rays hit " + counter.hitCount)
+    println("light " + counter.lightCount)
+    println("dark " + counter.darkCount)
+  }
+
 }
