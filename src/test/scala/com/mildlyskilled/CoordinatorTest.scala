@@ -1,7 +1,9 @@
 package com.mildlyskilled
 
 import akka.actor.{ActorSystem, Props}
-import akka.testkit.{ImplicitSender, TestActorRef, TestKit}
+import akka.testkit.{EventFilter, ImplicitSender, TestActorRef, TestKit}
+import com.typesafe.config.ConfigFactory
+
 import scala.concurrent.duration._
 import org.scalatest.{BeforeAndAfterAll, MustMatchers, WordSpecLike}
 
@@ -9,17 +11,31 @@ import org.scalatest.{BeforeAndAfterAll, MustMatchers, WordSpecLike}
   * Created to test Coordinator Actor
   */
 class CoordinatorTest(_system: ActorSystem) extends TestKit(_system) with ImplicitSender
-  with WordSpecLike with MustMatchers with BeforeAndAfterAll{
+  with WordSpecLike with MustMatchers with BeforeAndAfterAll {
 
-  def this() = this(ActorSystem("CoordinatorTest"))
+  def this() = this(ActorSystem("CoordinatorTest",
+    /*
+     Subscribe to the EventStream (where all the log messages go to)
+     to assert the presence of the log message itself.
+     @see http://rerun.me/2014/09/29/akka-notes-logging-and-testing/
+      */
+    ConfigFactory.parseString("""
+                               akka {
+                               loglevel = "WARNING"
+                                loggers = ["akka.testkit.TestEventListener"]
+                                test {
+                                  filter-leeway = 6s
+                                }
+                               } """)))
 
+  // =====================================================================
   val (inFile, outFile) = ("src/main/resources/input.dat", "output.png")
   val settings = new Settings(800, 600, 10, 4, 0.6f, Colour.black, 10)
   val counter = new Counter
   val camera = new Camera(Vector.origin, 90f)
   val scene = SceneLoader.load(inFile)
-
   val image = new Image(settings.width, settings.height)
+  // =====================================================================
 
   override def afterAll {
     TestKit.shutdownActorSystem(system)
@@ -58,6 +74,7 @@ class CoordinatorTest(_system: ActorSystem) extends TestKit(_system) with Implic
         assert(realCoordinator.waiting == nextWaitingValue)
       }
     }
+
 
   }
 }
