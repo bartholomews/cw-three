@@ -1,9 +1,9 @@
-package test.scala.com.mildlyskilled
+package com.mildlyskilled
 
-import akka.actor.{Props, ActorSystem}
-import akka.testkit.{TestActorRef, ImplicitSender, TestKit}
-import com.mildlyskilled._
-import org.scalatest.{MustMatchers, BeforeAndAfterAll, MustMatchers, WordSpecLike}
+import akka.actor.{ActorSystem, Props}
+import akka.testkit.{ImplicitSender, TestActorRef, TestKit}
+import scala.concurrent.duration._
+import org.scalatest.{BeforeAndAfterAll, MustMatchers, WordSpecLike}
 
 /**
   * Created to test Coordinator Actor
@@ -46,5 +46,18 @@ class CoordinatorTest(_system: ActorSystem) extends TestKit(_system) with Implic
       assert(realCoordinator.startOfSegments != null)
       assert(realCoordinator.endOfSegments != null)
     }
+
+    "decrease val waiting after receiving one Result message" in {
+      within(200 millis) {
+        // value of val waiting when the Coordinator is first initialised
+        val firstWaitingValue = settings.height * settings.width
+        // value of val waiting after one Result received
+        val nextWaitingValue = firstWaitingValue - 1
+        assert(realCoordinator.waiting == firstWaitingValue)
+        testCoordinator ! Result(0, 0, Colour.black)
+        assert(realCoordinator.waiting == nextWaitingValue)
+      }
+    }
+
   }
 }
