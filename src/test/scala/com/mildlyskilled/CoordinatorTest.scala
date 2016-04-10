@@ -19,9 +19,10 @@ class CoordinatorTest(_system: ActorSystem) extends TestKit(_system) with Implic
      to assert the presence of the log message itself.
      @see http://rerun.me/2014/09/29/akka-notes-logging-and-testing/
       */
-    ConfigFactory.parseString("""
+    ConfigFactory.parseString(
+      """
                                akka {
-                               loglevel = "WARNING"
+                                loglevel = "DEBUG"
                                 loggers = ["akka.testkit.TestEventListener"]
                                 test {
                                   filter-leeway = 6s
@@ -55,7 +56,7 @@ class CoordinatorTest(_system: ActorSystem) extends TestKit(_system) with Implic
     }
 
     "be waiting for the correct number of pixels" in {
-      assert(realCoordinator.waiting === 800*600)
+      assert(realCoordinator.waiting === 800 * 600)
     }
 
     "have start and end points for the pixel rendering" in {
@@ -75,6 +76,16 @@ class CoordinatorTest(_system: ActorSystem) extends TestKit(_system) with Implic
       }
     }
 
+    "send the right amount of Render messages to its Workers" in {
+      val settings = new Settings(4, 4, 2, 4, 0.6f, Colour.black, 10)
+      val masterRef = TestActorRef(new Coordinator(image, outFile, scene, settings, counter, camera))
+      EventFilter.debug(pattern = "Sent " +
+        masterRef.underlyingActor.endOfSegments.size + " Render messages", occurrences = 1) intercept {
+        masterRef ! Start
+      }
+    }
+
 
   }
+
 }
