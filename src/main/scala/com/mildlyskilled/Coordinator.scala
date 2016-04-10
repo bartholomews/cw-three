@@ -1,41 +1,42 @@
 package com.mildlyskilled
 
-import akka.actor.{Props, Actor}
+import akka.actor.{Actor, Props}
 import akka.routing.RoundRobinPool
+import org.apache.commons.lang.time.StopWatch
 
 /**
   * Coordinator made into an Actor
   */
 
-class Coordinator(im: Image, outFile: String, scene: Scene, counter: Counter,
-                  camera: Camera, settings: Settings) extends Actor {
-  val image = im
-  val outfile = outFile
-  var waiting = im.height * im.width
+class Coordinator(image: Image, outFile: String, scene: Scene, settings: Settings, counter: Counter, camera: Camera) extends Actor {
+  var waiting = image.width * image.height //for counting rendered pixels
 
+  val stopWatch = new StopWatch
+
+  //render node actors with round robin routing algorithm
   val renderNodesRouter = context.actorOf(Props(new RenderingEngine(scene, counter, camera, settings))
-    .withRouter(RoundRobinPool(settings.renderNodeNumber)), name = "renderNodes")
+    .withRouter(RoundRobinPool(settings.nodes)), name = "renderNodes")
 
-  val startOfSegments = for (i <- 0 to image.height by settings.renderLineWidth) yield i
+  val startOfSegments = for (i <- 0 to image.height by settings.regionHeight) yield i
   val endOfSegments = startOfSegments.tail
 
-  def set(x: Int, y: Int, c: Colour) = {
-    image(x, y) = c
+  def set(xPos: Int, yPos: Int, color: Colour) = {
+    image(xPos, yPos) = color
+    waiting -= 1
   }
 
   def print = {
     assert(waiting == 0)
-    image.print(outfile)
+    image.print(outFile)
   }
 
-  override def receive: Receive = {
-
+  def receive = {
     case Start =>
-      for (i <- endOfSegments.indices) renderNodesRouter ! Render(startOfSegments(i), endOfSegments(i), i)
+      stopWatch.start()
+      for (i <- 0 until endOfSegments.length) renderNodesRouter ! Render(startOfSegments(i), endOfSegments(i), i)
 
-    case Result(x, y, colour) =>
-      set(x, y, colour)
-      waiting -= 1
+    case Result(xPos, yPos, color) =>
+      set(xPos, yPos, color)
 
       if (waiting == 0) {
         println("rays cast " + counter.rayCount)
@@ -45,8 +46,10 @@ class Coordinator(im: Image, outFile: String, scene: Scene, counter: Counter,
 
         print
         println("Image printed out")
-        context.system.terminate()
+        stopWatch.stop()
+        println("Processing time: " + stopWatch.getTime + " ms")
         context stop self
+        context.system.terminate()
       }
   }
 }

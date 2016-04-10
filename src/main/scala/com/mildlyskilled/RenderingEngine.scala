@@ -1,12 +1,13 @@
 package com.mildlyskilled
 
 import akka.actor.Actor
-import akka.actor.Actor.Receive
+import org.apache.commons.lang.time.StopWatch
 
 /**
   * This is a worker actor, moving the computation into this class
   */
 class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: Settings) extends Actor {
+  val id = RenderingEngine.inc
   val objects = scene.objects
   val lights = scene.lights
 
@@ -14,15 +15,17 @@ class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: 
   val width = settings.width
   val height = settings.height
 
+  val stopWatch = new StopWatch
+
   def receive = {
     case Render(startY, endY , id) => {
       traceImage(startY, endY, id)
     }
   }
 
-  def traceImage(startY: Int, endY: Int, id: Int) {
-
-    println("Render Node " + id + " started")
+  def traceImage(startY: Int, endY: Int, iter: Int) {
+    stopWatch.start()
+    println("Render Node ID: " + id + ". Rendering Region Num: " + iter)
 
     for (y <- startY until endY) {
       for (x <- 0 until width) {
@@ -42,15 +45,15 @@ class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: 
         }
 
         if (Vector(resultColor.r, resultColor.g, resultColor.b).norm < 1)
-//          counter.darkCount += 1
           counter.darkCount.incrementAndGet()
         if (Vector(resultColor.r, resultColor.g, resultColor.b).norm > 1)
-//          counter.lightCount += 1
           counter.lightCount.incrementAndGet()
         sender ! Result(x, y, resultColor)
       }
     }
-    println("Render Node " + id + " finished")
+    stopWatch.stop()
+    println("Render Node " + id + " finished in " + stopWatch.getTime + " ms")
+    stopWatch.reset()
   }
 
   def shadow(ray: Ray, l: Light): Boolean = {
@@ -129,7 +132,6 @@ class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: 
   def trace(ray: Ray): Colour = trace(ray, maxDepth)
 
   private def trace(ray: Ray, depth: Int): Colour = {
-//    counter.rayCount += 1
     counter.rayCount.incrementAndGet()
 
     // Compute the intersections of the ray with every object, sort by
@@ -139,12 +141,11 @@ class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: 
     r match {
       case None => {
         // If no intersection, the color is black
-        settings.backgroundColor
+        settings.bgColor
       }
       case Some((v, o)) => {
         // Compute the color as the sum of:
 
-//        counter.hitCount += 1
         counter.hitCount.incrementAndGet()
 
         // The contribution of each point light source.
@@ -160,4 +161,9 @@ class RenderingEngine(scene: Scene, counter: Counter, camera: Camera, settings: 
       }
     }
   }
+}
+
+object RenderingEngine{
+  private var ID = 0
+  private def inc = {ID += 1; ID}
 }

@@ -1,33 +1,19 @@
-import java.io.File
-
-import com.mildlyskilled.Coordinator
-import com.mildlyskilled.{Scene, Image, Coordinator, Trace}
-
+import akka.actor.{ActorSystem, Props, _}
+import com.mildlyskilled.{Coordinator, _}
 
 object Tracer extends App {
 
-  val (infile, outfile) = ("src/main/resources/input.dat", "output.png")
-  val scene = Scene.fromFile(infile)
-  val t = new Trace
-  render(scene, outfile, t.Width, t.Height)
+  val (inFile, outFile) = ("src/main/resources/input.dat", "output.png")
+  val settings = new Settings(800, 600, 10, 4, 0.6f, Colour.black, 10)
+  val counter = new Counter
+  val camera = new Camera(Vector.origin, 90f)
+  val scene = SceneLoader.load(inFile)
 
-  println("rays cast " + t.rayCount)
-  println("rays hit " + t.hitCount)
-  println("light " + t.lightCount)
-  println("dark " + t.darkCount)
+  val image = new Image(settings.width, settings.height)
 
-  def render(scene: Scene, outfile: String, width: Int, height: Int) = {
-    val image = new Image(width, height)
+  val system = ActorSystem("RenderSystem")
 
-    // Init the coordinator -- must be done before starting it.
-    Coordinator.init(image, outfile)
+  val coordinator = system.actorOf(Props(new Coordinator(image, outFile, scene, settings, counter, camera)), name = "coordinator")
 
-    // TODO: Start the Coordinator actor.
-
-    scene.traceImage(width, height)
-
-    // AJ - moved print to Coordinator actor
-    //Coordinator.print
-  }
-
+  coordinator ! Start
 }
